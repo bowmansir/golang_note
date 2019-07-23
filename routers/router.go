@@ -1,7 +1,9 @@
 package routers
 
 import (
+	"blog/middleware/jwt"
 	"blog/pkg/setting"
+	"blog/routers/api"
 	v1 "blog/routers/api/v1"
 
 	"github.com/gin-gonic/gin"
@@ -22,7 +24,10 @@ func InitRouter() *gin.Engine {
 		})
 	})
 
+	r.GET("/auth", api.GetAuth)
+
 	apiv1 := r.Group("/api/v1")
+	apiv1.Use(jwt.JWT())
 	{
 		//获取标签列表
 		apiv1.GET("/tags", v1.GetTags)
@@ -39,7 +44,7 @@ func InitRouter() *gin.Engine {
 		//新建文章
 		apiv1.POST("/articles", v1.AddArticle)
 		//更新指定文章
-		apiv1.PUT("/articles")
+		apiv1.PUT("/articles/:id", v1.EditArticle)
 		//删除指定文章
 		apiv1.DELETE("/articles/:id", v1.DeleteArticle)
 	}

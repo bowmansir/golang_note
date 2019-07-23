@@ -15,6 +15,7 @@ var (
 	WriteTimeOut time.Duration
 	PageSize     int
 	JwtSecret    string
+	ExpireTime   int
 )
 
 func init() {
@@ -55,4 +56,5 @@ func LoadApp() {
 
 	JwtSecret = sec.Key("JwtSecret").MustString("!@)*#)!@U#@*!@!)")
 	PageSize = sec.Key("PageSize").MustInt(10)
+	ExpireTime = sec.Key("ExpireTime").MustInt(3)
 }
