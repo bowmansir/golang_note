@@ -12,7 +12,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//新增多个文章标签
 func GetTags(c *gin.Context) {
 	name := c.Query("name")
 
@@ -32,7 +31,7 @@ func GetTags(c *gin.Context) {
 
 	code := e.SUCCESS
 
-	data["lists"] = models.GetTags(util.GetPage(c), setting.PageSize, maps)
+	data["lists"] = models.GetTags(util.GetPage(c), setting.AppSetting.PageSize, maps)
 	data["total"] = models.GetTagTotal(maps)
 
 	c.JSON(http.StatusOK, gin.H{
@@ -42,7 +41,6 @@ func GetTags(c *gin.Context) {
 	})
 }
 
-//新增文章标签
 func AddTag(c *gin.Context) {
 	name := c.Query("name")
 	state := com.StrTo(c.DefaultQuery("state", "0")).MustInt()
@@ -72,7 +70,6 @@ func AddTag(c *gin.Context) {
 	})
 }
 
-//修改文章标签
 func EditTag(c *gin.Context) {
 	id := com.StrTo(c.Param("id")).MustInt()
 	name := c.Query("name")
@@ -116,7 +113,6 @@ func EditTag(c *gin.Context) {
 	})
 }
 
-//删除文章标签
 func DeleteTag(c *gin.Context) {
 	id := com.StrTo(c.Param("id")).MustInt()
 

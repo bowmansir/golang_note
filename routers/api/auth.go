@@ -3,9 +3,9 @@ package api
 import (
 	"blog/models"
 	"blog/pkg/e"
+	"blog/pkg/logging"
 	"blog/pkg/util"
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/astaxie/beego/validation"
@@ -43,7 +43,7 @@ func GetAuth(c *gin.Context) {
 		}
 	} else {
 		for _, err := range valid.Errors {
-			log.Println(err.Key, err.Message)
+			logging.Info(err.Key, err.Message)
 		}
 	}
 	c.JSON(http.StatusOK, gin.H{

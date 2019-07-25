@@ -5,6 +5,13 @@ import (
 	"blog/pkg/setting"
 	"blog/routers/api"
 	v1 "blog/routers/api/v1"
+	"blog/upload"
+	"net/http"
+
+	_ "blog/docs"
+
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,7 +23,7 @@ func InitRouter() *gin.Engine {
 
 	r.Use(gin.Recovery())
 
-	gin.SetMode(setting.RunMode)
+	gin.SetMode(setting.ServerSetting.RunMode)
 
 	r.GET("/test", func(c *gin.Context) {
 		c.JSON(200, gin.H{
@@ -24,7 +31,11 @@ func InitRouter() *gin.Engine {
 		})
 	})
 
+	r.StaticFS("/upload/images", http.Dir(upload.GetImageFullPath()))
+
 	r.GET("/auth", api.GetAuth)
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	r.POST("/upload", api.UploadImage)
 
 	apiv1 := r.Group("/api/v1")
 	apiv1.Use(jwt.JWT())
