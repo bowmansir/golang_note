@@ -2,6 +2,7 @@ package v1
 
 import (
 	"blog/models"
+	"blog/pkg/app"
 	"blog/pkg/e"
 	"blog/pkg/logging"
 	"blog/pkg/setting"
@@ -14,10 +15,20 @@ import (
 )
 
 func GetArticle(c *gin.Context) {
+	appG := app.Gin{c}
 	id := com.StrTo(c.Param("id")).MustInt()
 
 	valid := validation.Validation{}
 	valid.Min(id, 1, "id").Message("ID 必须大于0")
+
+	//优化代码， 错误直接抛出
+	if valid.HasErrors() {
+		app.MarkErrors(valid.Errors)
+		appG.Response(http.StatusOK, e.INVALID_PARAMS, nil)
+		return
+	}
+
+	articleService := article_service.Article{ID: id}
 
 	code := e.INVALID_PARAMS
 	var data interface{}
